@@ -31,7 +31,11 @@ texts = text_splitter.split_documents(data)
 embeddings = OpenAIEmbeddings(openai_api_key =API_KEY) # set openai_api_key = 'your_openai_api_key' # type: ignore
 pinecone.init(api_key=P_API_KEY, environment="gcp-starter")
 index_name = pinecone.Index('index-1')
-
+llm = ChatOpenAI(model_name='gpt-3.5-turbo-0301', temperature=0,openai_api_key =API_KEY )
+vectordb = Pinecone.from_documents(texts, embeddings, index_name='index-1')
+retriever = vectordb.as_retriever()
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages= True)
+chain = ConversationalRetrievalChain.from_llm(llm, retriever= retriever, memory= memory)
 
 with st.sidebar:
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
@@ -49,7 +53,13 @@ if prompt := st.chat_input():
     openai.api_key = API_KEY
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=st.session_state.messages)
+    response = chain.run({'question': prompt})
     msg = response.choices[0].message
     st.session_state.messages.append(msg)
     st.chat_message("assistant").write(msg.content)
+
+
+
+
+
+
