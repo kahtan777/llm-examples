@@ -72,7 +72,7 @@ for msg in st.session_state.messages:
 
 if prompt := st.chat_input():
     print(prompt)
-    print('s3manticsearch', str(semantic_search('hello world')))
+    st.write(str(semantic_search('hello world')))
     openai.api_key = API_KEY
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
