@@ -1,5 +1,16 @@
 import openai
 import streamlit as st
+import pinecone
+from langchain.document_loaders import WebBaseLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Pinecone
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationalRetrievalChain
+from langchain.chains import RetrievalQA
+
+
 API_KEY=st.secrets["openAI_key"]
 with st.sidebar:
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
