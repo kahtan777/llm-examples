@@ -2,10 +2,7 @@ import openai
 import streamlit as st
 API_KEY=st.secrets["openAI_key"]
 with st.sidebar:
-    
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
-    "[View the source code](https://github.com/streamlit/llm-examples/blob/main/Chatbot.py)"
-    "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
 st.title("💬 Chatbot")
 st.caption("🚀 A streamlit chatbot powered by OpenAI LLM")
