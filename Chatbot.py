@@ -42,7 +42,7 @@ def semantic_search(prompt):
   MODEL = "text-embedding-ada-002"
   messages = []
 
-  index = pinecone.Index(index_name)
+  index = pinecone.Index('index-1')
 
   search_response = index.query(
   top_k=5,
