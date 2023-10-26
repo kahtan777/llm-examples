@@ -49,14 +49,13 @@ for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
 if prompt := st.chat_input():
-    print(messages)
     print(prompt)
-    print(message)
     openai.api_key = API_KEY
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
-    response = chain.run({'question': prompt})
+    response = chain.run({'question': "hello"})
     msg = response.choices[0].message
+    print(msg)
     st.session_state.messages.append(msg)
     st.chat_message("assistant").write(msg.content)
     
