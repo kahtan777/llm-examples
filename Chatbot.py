@@ -14,7 +14,36 @@ from langchain.chains import RetrievalQA
 
 P_API_KEY =st.secrets["pincone_key"]
 API_KEY=st.secrets["openAI_key"]
+st.set_page_config(layout="centered")
 
+with st.container():
+    video_html = """
+    <style>
+    .video-container {
+    width: 100%; 
+    height: auto;
+    }
+
+    video {
+    width: 100%; 
+    height: auto;
+    }
+
+    .content {
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    width: 100%;
+    padding: 20px;
+    }
+    </style>    
+    <div class="video-container">
+    <video autoplay muted loop id="myVideo">
+        <source src="https://static.streamlit.io/examples/star.mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    </div>
+    """  
+    st.markdown(video_html, unsafe_allow_html=True) 
 
 loader = WebBaseLoader("https://medium.com/swlh/an-ultimate-guide-to-creating-a-startup-3b310f41d7e7")
 data = loader.load()
@@ -62,8 +91,6 @@ def semantic_search(prompt):
 with st.sidebar:
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
 
-st.title("💬 Chatbot")
-st.caption("🚀 A streamlit chatbot powered by OpenAI LLM")
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
