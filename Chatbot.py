@@ -87,8 +87,6 @@ def semantic_search(prompt):
 
   return messages
 
-with st.sidebar:
-    "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
