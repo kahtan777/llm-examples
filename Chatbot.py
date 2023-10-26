@@ -31,11 +31,33 @@ texts = text_splitter.split_documents(data)
 embeddings = OpenAIEmbeddings(openai_api_key =API_KEY) # set openai_api_key = 'your_openai_api_key' # type: ignore
 pinecone.init(api_key=P_API_KEY, environment="gcp-starter")
 index_name = pinecone.Index('index-1')
-llm = ChatOpenAI(model_name='gpt-3.5-turbo-0301', temperature=0,openai_api_key =API_KEY )
-vectordb = Pinecone.from_documents(texts, embeddings, index_name='index-1')
-retriever = vectordb.as_retriever()
-memory = ConversationBufferMemory(memory_key="chat_history", return_messages= True)
-chain = ConversationalRetrievalChain.from_llm(llm, retriever= retriever, memory= memory)
+
+#llm = ChatOpenAI(model_name='gpt-3.5-turbo-0301', temperature=0,openai_api_key =API_KEY )
+#vectordb = Pinecone.from_documents(texts, embeddings, index_name='index-1')
+#retriever = vectordb.as_retriever()
+#memory = ConversationBufferMemory(memory_key="chat_history", return_messages= True)
+#chain = ConversationalRetrievalChain.from_llm(llm, retriever= retriever, memory= memory)
+
+def semantic_search(prompt):
+  MODEL = "text-embedding-ada-002"
+  messages = []
+
+  index = pinecone.Index(index_name)
+
+  search_response = index.query(
+  top_k=5,
+    vector=tuple(openai.Embedding.create(
+    input=[
+        prompt
+    ], engine=MODEL
+  )["data"][0]["embedding"]),
+    include_metadata=True,
+  )['matches']
+
+  for response in search_response:
+    messages.append(response['metadata']['description'])
+
+  return messages
 
 with st.sidebar:
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
@@ -50,6 +72,7 @@ for msg in st.session_state.messages:
 
 if prompt := st.chat_input():
     print(prompt)
+    print('s3manticsearch', str(semantic_search('hello world')))
     openai.api_key = API_KEY
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
